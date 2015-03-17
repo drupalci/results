@@ -67,9 +67,7 @@ This is an example of progressing a build from:
 $ cat ~/.drupalci-results.yml
 
 # Create a new build.
-$ php bin/results-cli create --title="#123234234 - 1 - Test my stuff"
-
-Build created: http://drupalci-results.dev/entity/node/13
+$ BUILD=$(php bin/results-cli create --title="#123234234 - 1 - Test my stuff")
 
 # Get the build states.
 $ php bin/results-cli states
@@ -84,7 +82,7 @@ $ php bin/results-cli states
 +----+----------+------------+
 
 # Progress a build.
-$ php bin/results-cli progress --build="13" --state="2"
+$ php bin/results-cli progress --state="2" --build=$BUILD
 
 Updated build to the state: 2
 
@@ -95,17 +93,17 @@ $ php bin/results-cli summary --artefacts="tests/assets"
 Assertions: 12, Failures: 113 and 1000 errors.
 
 # Submit a summary.
-$ php bin/results-cli summary --artefacts="tests/assets" --build="13"
+$ php bin/results-cli summary --artefacts="tests/assets" --build=$BUILD
 
 Assertions: 12, Failures: 113 and 1000 errors.
 
 # Upload the artefacts.
-$ php bin/results-cli upload --artefacts="tests/assets" --build="13"
+$ php bin/results-cli upload --artefacts="tests/assets" --build=$BUILD
 
 Successfully upload artefacts to build: 13
 
 # Mark the build as "passed".
-$ php bin/results-cli progress --build="13" --state="4"
+$ php bin/results-cli progress --build=$BUILD --state="4"
 
 Updated build to the state: 4
 ```
