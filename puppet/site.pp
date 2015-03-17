@@ -49,6 +49,9 @@ node default {
     manage_docroot => false,
     priority       => '25',
     override       => [ 'ALL' ],
+    setenvif       => [
+      'X-Forwarded-Proto https HTTPS=on',
+    ],
   }
 
   mysql::db { 'drupal':
