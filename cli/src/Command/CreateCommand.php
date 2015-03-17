@@ -26,12 +26,18 @@ class CreateCommand extends BaseCommand {
     $api = $this->getApi();
     $location = $api->create($title);
 
-    if ($location) {
-      preg_match('/(\d+)\s*$/', $location, $match);
-      $output->writeln($match[1]);
+    if ($build_id = $this->getBuildId($location)) {
+      $output->writeln($build_id);
     }
     else {
       $output->writeln('<error>Failed to create a new build.</error>');
     }
+  }
+
+  public function getBuildId($location) {
+    if (preg_match('/(\d+)\s*$/', $location, $match)) {
+      return $match[1];
+    }
+    return FALSE;
   }
 }
