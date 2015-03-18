@@ -8,6 +8,7 @@ use DrupalCIResults\Command\ProgressCommand;
 use DrupalCIResults\Command\UploadCommand;
 use DrupalCIResults\Command\SummaryCommand;
 use DrupalCIResults\Command\StatesCommand;
+use DrupalCIResults\Command\TagCommand;
 use Symfony\Component\Console\Application;
 
 $application = new Application('ResultsCLI', '0.1-dev');
@@ -16,4 +17,5 @@ $application->add(new ProgressCommand("progress"));
 $application->add(new UploadCommand("upload"));
 $application->add(new SummaryCommand("summary"));
 $application->add(new StatesCommand("states"));
+$application->add(new TagCommand("tag"));
 $application->run();

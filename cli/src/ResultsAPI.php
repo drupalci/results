@@ -54,14 +54,14 @@ class ResultsAPI {
 
     $new = $this->getStateId('new');
     $client = new Client(['base_url' => $url]);
-    $response = $client->post('/entity/node', [
+    $response = $client->post('entity/node', [
       'headers' => [
         'Content-type' => 'application/hal+json',
       ],
       'body' => json_encode(array(
           '_links' => array(
             'type' => array(
-              'href' => $url . '/rest/type/node/result',
+              'href' => $url . 'rest/type/node/result',
             )
           ),
           'title' => array(0 => array('value' => $title)),
@@ -88,14 +88,14 @@ class ResultsAPI {
     $url = $this->getUrl();
 
     $client = new Client(['base_url' => $url]);
-    $client->patch('/node/' . $build, [
+    $client->patch('node/' . $build, [
       'headers' => [
         'Content-type' => 'application/hal+json',
       ],
       'body' => json_encode(array(
         '_links' => array(
           'type' => array(
-            'href' => $url . '/rest/type/node/result',
+            'href' => $url . 'rest/type/node/result',
           )
         ),
         'field_state' => array(0 => array('target_id' => $state)),
@@ -122,14 +122,14 @@ class ResultsAPI {
     $url = $this->getUrl();
 
     $client = new Client(['base_url' => $url]);
-    $client->patch('/node/' . $build, [
+    $client->patch('node/' . $build, [
       'headers' => [
         'Content-type' => 'application/hal+json',
       ],
       'body' => json_encode(array(
         '_links' => array(
           'type' => array(
-            'href' => $url . '/rest/type/node/result',
+            'href' => $url . 'rest/type/node/result',
           )
         ),
         'field_artefacts' => $artefacts,
@@ -153,17 +153,48 @@ class ResultsAPI {
     $url = $this->getUrl();
 
     $client = new Client(['base_url' => $url]);
-    $client->patch('/node/' . $build, [
+    $client->patch('node/' . $build, [
       'headers' => [
         'Content-type' => 'application/hal+json',
       ],
       'body' => json_encode(array(
         '_links' => array(
           'type' => array(
-            'href' => $url . '/rest/type/node/result',
+            'href' => $url . 'rest/type/node/result',
           )
         ),
         'field_summary' => array(0 => array('value' => $summary)),
+      )),
+      'auth' => [$username, $password],
+    ]);
+  }
+
+  /**
+   * Updates the build with the following summary message.
+   */
+  public function tag($build, $tags) {
+    if (empty($build)) {
+      throw new Exception('Please provide a build.');
+    }
+    if (empty($tags)) {
+      throw new Exception('Please provide at least one tag.');
+    }
+    $username = $this->getUsername();
+    $password = $this->getPassword();
+    $url = $this->getUrl();
+
+    $client = new Client(['base_url' => $url]);
+    $client->patch('node/' . $build, [
+      'headers' => [
+        'Content-type' => 'application/hal+json',
+      ],
+      'body' => json_encode(array(
+        '_links' => array(
+          'type' => array(
+            'href' => $url . 'rest/type/node/result',
+          )
+        ),
+        'field_tags' => $this->buildTags($tags),
       )),
       'auth' => [$username, $password],
     ]);
@@ -176,7 +207,7 @@ class ResultsAPI {
   public function states() {
     $url = $this->getUrl();
     $client = new Client(['base_url' => $url]);
-    $response = $client->get('/states', [
+    $response = $client->get('states', [
       'headers' => [
         'Accept'     => 'application/hal+json',
       ]
@@ -193,6 +224,75 @@ class ResultsAPI {
       );
     }
     return $return;
+  }
+
+  /**
+   * Builds the tag list for the JSON.
+   */
+  private function buildTags($tags) {
+    $full_tags = $this->getTags();
+
+    // Create any non-existent tags.
+    $new_tags = array_diff($tags, array_keys($full_tags));
+    if (!empty($new_tags)) {
+      foreach ($new_tags as $tag) {
+        $this->createTag($tag);
+      }
+
+      // Reload all tags.
+      $full_tags = $this->getTags();
+    }
+
+    // Generates the JSON references.
+    $list = array();
+    foreach ($tags as $tag) {
+      $list[] = array('target_id' => $full_tags[$tag]);
+    }
+    return $list;
+  }
+
+  /**
+   * Helper function to get all the tags.
+   */
+  private function getTags() {
+    $url = $this->getUrl();
+    $client = new Client(['base_url' => $url]);
+    $response = $client->get('tags', [
+      'headers' => [
+        'Accept'     => 'application/hal+json',
+      ]
+    ]);
+
+    // Format the remote API into something useful.
+    $tags = $response->json();
+    $return = array();
+    foreach ($tags as $tag) {
+      $return[$tag['name']] = $tag['tid'];
+    }
+    return $return;
+  }
+
+  /**
+   * Helper function to create a non-existent tag.
+   */
+  private function createTag($tag) {
+    $url = $this->getUrl();
+    $client = new Client(['base_url' => $url]);
+    $response = $client->post('entity/taxonomy_term', [
+      'headers' => [
+        'Content-type' => 'application/hal+json',
+      ],
+      'body' => json_encode(array(
+        '_links' => array(
+          'type' => array(
+            'href' => $url . 'rest/type/taxonomy_term/tags',
+          )
+        ),
+        'name' => array(['value' => $tag]),
+        'vid' => array(['value' => 'tags']),
+      )),
+      'auth' => [$this->getUsername(), $this->getPassword()],
+    ]);
   }
 
   /**
@@ -245,7 +345,7 @@ class ResultsAPI {
    * @param string $url
    */
   public function setUrl($url) {
-    $this->url = $url;
+    $this->url = rtrim($url, '/') . '/';
   }
 
 }
