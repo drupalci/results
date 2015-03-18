@@ -6,6 +6,7 @@
 <project name="results" default="build" phingVersion="2.4.11">
 
     <!-- Properties. -->
+    <property file="build.properties" />
 
     <!-- Application -->
     <property name="app.docroot" value="app" />
