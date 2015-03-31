@@ -70,7 +70,8 @@ class ResultsAPI {
       'auth' => [$username, $password],
     ]);
 
-    return $response->getHeader('Location');
+    $id = getBuildId($response->getHeader('Location'));
+    return $id;
   }
 
   /**
@@ -346,6 +347,16 @@ class ResultsAPI {
    */
   public function setUrl($url) {
     $this->url = rtrim($url, '/') . '/';
+  }
+
+  /**
+   * Helper function to derive a
+   */
+  private function getBuildId($location) {
+    if (preg_match('/(\d+)\s*$/', $location, $match)) {
+      return $match[1];
+    }
+    return FALSE;
   }
 
 }

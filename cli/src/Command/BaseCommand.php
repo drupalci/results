@@ -50,32 +50,41 @@ class BaseCommand extends Command {
   protected function execute(InputInterface $input, OutputInterface $output) {
     // Load the yaml file from the users profile for $config.
     $home = getenv("HOME");
-    $config = Yaml::parse($home . '/.drupalci-results.yml');
+    if (file_exists($home . '/.drupalci-results.yml')) {
+      $config = Yaml::parse($home . '/.drupalci-results.yml');
+    }
+    else if (file_exists('/etc/drupalci/config.yaml')) {
+      $config = Yaml::parse('/etc/drupalci/config.yaml');
+    }
+    else {
+      throw new \Exception('Could not find a configuration file.');
+    }
+
     $this->setConfig($config);
 
-    $url = !empty($config['url']) ? $config['url'] : '';
-    if (!$url) {
+    $host = !empty($config['results']['host']) ? $config['host'] : '';
+    if (!$host) {
       throw new \Exception('Please provide a URL via cmd or config file.');
     }
 
-    $username = !empty($config['user']) ? $config['user'] : '';
+    $username = !empty($config['results']['username']) ? $config['results']['username'] : '';
     if (!$username) {
       throw new \Exception('Please provide a username via cmd or config file.');
     }
 
-    $password = !empty($config['pass']) ? $config['pass'] : '';
+    $password = !empty($config['results']['password']) ? $config['results']['password'] : '';
     if (!$password) {
       throw new \Exception('Please provide a password via cmd or config file.');
     }
 
     // Set these values for later.
-    $this->setUrl($url);
+    $this->setUrl($host);
     $this->setUsername($username);
     $this->setPassword($password);
 
     // Attach the DrupalCI results API for use in sub commands.
     $api = new ResultsAPI();
-    $api->setUrl($url);
+    $api->setUrl($host);
     $api->setAuth($username, $password);
     $this->setApi($api);
   }

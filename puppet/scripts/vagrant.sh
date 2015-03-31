@@ -3,6 +3,6 @@
 # Script: vagrant.sh
 # Author: Nick Schuch
 
-DIR='/vagrant/puppet'
+DIR='/var/www/results/puppet'
 
 cd $DIR && sh scripts/provision.sh

@@ -33,11 +33,4 @@ class CreateCommand extends BaseCommand {
       $output->writeln('<error>Failed to create a new build.</error>');
     }
   }
-
-  public function getBuildId($location) {
-    if (preg_match('/(\d+)\s*$/', $location, $match)) {
-      return $match[1];
-    }
-    return FALSE;
-  }
 }
