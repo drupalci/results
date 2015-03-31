@@ -42,6 +42,17 @@ node default {
   apache::listen { '80': }
   include apache::mod::rewrite
   include apache::mod::php
+  if $httpsonly {
+    $rewrite_array = [
+      {
+        comment      => 'Rewrite to HTTPS',
+        rewrite_cond => ['%{HTTP:X-Forwarded-Proto} !https'],
+        rewrite_rule => ['^.*$ https://%{SERVER_NAME}%{REQUEST_URI}'],
+      },
+    ]
+  } else {
+    $rewrite_array = [ ]
+  }
 
   apache::vhost { $fqdn:
     port           => '80',
@@ -49,16 +60,10 @@ node default {
     manage_docroot => false,
     priority       => '25',
     override       => [ 'ALL' ],
+    rewrites       => $rewrite_array,
     setenvif       => [
       'X-Forwarded-Proto https HTTPS=on',
     ],
-  }
-  if $httpsonly {
-    apache::custom_config { 'httpsrewrite':
-      content => '# Rewrite to HTTPS
-RewriteCond %{HTTP:X-Forwarded-Proto} !=https
-RewriteRule ^/(.*$) https://%{HTTP_HOST}/$1 [R=permanent,NE]',
-    }
   }
 
   mysql::db { 'drupal':
