@@ -1,7 +1,9 @@
 {
+  "variables": {
+    "source_ami": "ami-95d7b4af"
+  },
   "provisioners": [{
       "type":        "file",
-
       "source":      ".",
       "destination": "/tmp/results"
     },{
@@ -18,7 +20,7 @@
     {
       "type":          "amazon-ebs",
       "region":        "ap-southeast-2",
-      "source_ami":    "ami-95d7b4af",
+      "source_ami":    "{{user `source_ami`}}",
       "instance_type": "m3.medium",
       "ssh_username":  "ubuntu",
       "ami_name":      "DrupalCI Results {{timestamp}}"
