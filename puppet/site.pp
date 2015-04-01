@@ -51,7 +51,7 @@ node default {
       },
     ]
   } else {
-    $rewrite_array = [ ]
+    $rewrite_array = undef
   }
 
   apache::vhost { $fqdn:
