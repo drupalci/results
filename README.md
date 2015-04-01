@@ -3,13 +3,23 @@ DrupalCI Results
 
 ## Overview
 
-Results site for DrupalCI.
+Build reporting for build projects.
 
-## Screenshot
 
-![Screenshot](/docs/results.png "Screenshot")
+## Diagram
 
-## Architecture
+![Diagram](docs/diagram.png "Diagram")
 
-![Architecture](docs/architecture.png "Architecture")
+## Build
 
+**Standard build**
+
+```bash
+$ packer build packer/packer.json
+```
+
+**Build off a different base AMI**
+
+```bash
+$ packer build -var 'source_ami=ami-123456' packer/packer.json
+```
