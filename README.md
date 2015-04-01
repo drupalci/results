@@ -12,6 +12,17 @@ Build reporting for build projects.
 
 ## Build
 
+**Local**
+
+```bash
+$ vagrant up
+$ vagrant provision
+$ vagrant ssh
+$ cd /var/www/results
+$ phing
+```
+Point web browser at `192.168.50.10`
+
 **Credentials**
 
 The following will setup your authentication to AWS.
