@@ -12,6 +12,15 @@ Build reporting for build projects.
 
 ## Build
 
+**Credentials**
+
+The following will setup your authentication to AWS.
+
+```bash
+$ export AWS_ACCESS_KEY='Super secret access key'
+$ export AWS_SECRET_KEY='Super secret secret key'
+```
+
 **Standard build**
 
 ```bash
