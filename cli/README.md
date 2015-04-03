@@ -4,6 +4,12 @@ DrupalCI Results - CLI
 ## Overview
 
 Command line client for the results site.
+It assumes you should have composer installed.
+```
+curl -sS https://getcomposer.org/installer | php
+mv composer.phar /usr/local/bin/composer
+composer install
+```
 
 ## Usage
 
