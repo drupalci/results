@@ -5,7 +5,7 @@
 
 mv /tmp/results /var/www/results
 
-cd /var/www/results && phing make
+cd /var/www/results && phing build
 
 mkdir -p /var/www/results/sites/default/files/tmp
 mkdir -p /var/www/results/sites/default/private
