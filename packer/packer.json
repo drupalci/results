@@ -23,7 +23,9 @@
       "source_ami":    "{{user `source_ami`}}",
       "instance_type": "m3.medium",
       "ssh_username":  "ubuntu",
-      "ami_name":      "DrupalCI Results {{timestamp}}"
+      "ami_name":      "DrupalCI Results {{timestamp}}",
+      "access_key":    "AKIAJVT7EJJ4T7JBY4HQ",
+      "secret_key":    "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"
     }
   ]
 }

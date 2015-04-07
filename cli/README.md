@@ -5,10 +5,11 @@ DrupalCI Results - CLI
 
 Command line client for the results site.
 It assumes you should have composer installed.
-```
-curl -sS https://getcomposer.org/installer | php
-mv composer.phar /usr/local/bin/composer
-composer install
+
+```bash
+$ curl -sS https://getcomposer.org/installer | php
+$ mv composer.phar /usr/local/bin/composer
+$ composer install
 ```
 
 ## Usage
@@ -48,16 +49,18 @@ This contains the common configuration for the Results CLI. That file can be fou
 
 Here is an example file:
 
-```
+```bash
 # Basic configuration.
-user: "admin"
-pass: "password"
-url:  "http://drupalci-results.dev"
+jenkins:
+  user: "admin"
+  pass: "password"
+  host:  "http://drupalci-results.dev"
 
 # Used for storing artefacts.
-s3_bucket: "drupalci-results"
-s3_key:    "XXXXXXXXXXXXXXXXXXXX"
-s3_secret: "XXXXXXXXXXXXXXXXXXXX"
+s3:
+  bucket: "drupalci-results"
+  key:    "XXXXXXXXXXXXXXXXXXXX"
+  secret: "XXXXXXXXXXXXXXXXXXXX"
 ```
 
 ### Using the CLI
@@ -94,12 +97,12 @@ Updated build to the state: 2
 
 # Generate a summary.
 $ ls -l tests/assets
-$ php bin/results-cli summary --artefacts="tests/assets"
+$ php bin/results-cli summary --sqlite="tests/assets/test.sqlite"
 
 Assertions: 12, Failures: 113 and 1000 errors.
 
 # Submit a summary.
-$ php bin/results-cli summary --artefacts="tests/assets" --build=$BUILD
+$ php bin/results-cli summary --sqlite="tests/assets/test.sqlite" --build=$BUILD
 
 Assertions: 12, Failures: 113 and 1000 errors.
 

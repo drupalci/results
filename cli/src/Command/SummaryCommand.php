@@ -20,21 +20,37 @@ class SummaryCommand extends BaseCommand {
     $this->setName($command)
       ->setDescription('Generate a summary message based on the artefacts.')
       ->addOption('build', null, InputOption::VALUE_REQUIRED, 'The build to upload the summary to.')
-      ->addOption('artefacts', null, InputOption::VALUE_REQUIRED, 'The path to the build artefacts.', '.');
+      ->addOption('sqlite', null, InputOption::VALUE_REQUIRED, 'The sqlite data file from the build.', '.');
   }
 
   protected function execute(InputInterface $input, OutputInterface $output) {
     parent::execute($input, $output);
 
-    $artefacts = $input->getOption('artefacts');
+    $sqlite = $input->getOption('sqlite');
     $build = $input->getOption('build');
 
-    // Build the results.
+    $db = new \SQLite3($sqlite);
+    $results = $db->query('SELECT * FROM simpletest');
+
     $summary = new ParserResults();
-    $finder = new Finder();
-    $finder->files()->in($artefacts);
-    foreach ($finder as $file) {
-      $this->parseFile($file, $summary);
+    while ($row = $results->fetchArray()) {
+      switch ($row['status']) {
+        case "pass":
+          $summary->incrementPasses();
+          break;
+
+        case "fail":
+          $summary->incrementFailures();
+          break;
+
+        case "error":
+          $summary->incrementErrors();
+          break;
+
+        case "debug":
+          $summary->incrementDebugs();
+          break;
+      }
     }
 
     $message = $summary->printResults();
@@ -49,26 +65,6 @@ class SummaryCommand extends BaseCommand {
     }
     else {
       $output->writeln('<error>Failed to generate the summary message.</error>');
-    }
-  }
-
-  /**
-   * Parse a file and append the results to the summary object.
-   * @param $file
-   * @param $summary
-   */
-  private function parseFile($file, &$summary) {
-    // Load up all the classes.
-    $parsers = Yaml::parse('parsers.yml');
-
-    // If the file is valid we append the results to the summary object.
-    foreach ($parsers as $parser) {
-      $path = $file->getRealpath();
-      $object = new $parser();
-      $object->setFile($path);
-      if ($object->validate($path)) {
-        $object->appendResults($summary);
-      }
     }
   }
 

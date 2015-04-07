@@ -62,17 +62,17 @@ class BaseCommand extends Command {
 
     $this->setConfig($config);
 
-    $host = !empty($config['results']['host']) ? $config['host'] : '';
+    $host = !empty($config['results']['host']) ? $config['results']['host'] : '';
     if (!$host) {
       throw new \Exception('Please provide a URL via cmd or config file.');
     }
 
-    $username = !empty($config['results']['username']) ? $config['results']['username'] : '';
+    $username = !empty($config['results']['user']) ? $config['results']['user'] : '';
     if (!$username) {
       throw new \Exception('Please provide a username via cmd or config file.');
     }
 
-    $password = !empty($config['results']['password']) ? $config['results']['password'] : '';
+    $password = !empty($config['results']['pass']) ? $config['results']['pass'] : '';
     if (!$password) {
       throw new \Exception('Please provide a password via cmd or config file.');
     }

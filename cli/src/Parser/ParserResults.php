@@ -7,62 +7,67 @@ namespace DrupalCIResults\Parser;
  * A class to track the number of passes, fails and errors.
  */
 
-class ParserResults implements ParserResultsInterface {
+class ParserResults {
 
-  protected $assertions = 0;
+  protected $passes = 0;
 
   protected $failures = 0;
 
   protected $errors = 0;
+
+  protected $debugs = 0;
 
   /**
    * Print the results into a human readable string.
    * @return string
    */
   public function printResults() {
-    $assertions = $this->getAssertions();
+    $passes = $this->getPasses();
     $failures = $this->getFailures();
     $errors = $this->getErrors();
-    return "Assertions: " . $assertions . ", Failures: " . $failures . " and " . $errors . " errors.";
-  }
-
-  /**
-   * Helper function to increment fails.
-   */
-  public function addAssertions($assertions) {
-    $total = $this->getAssertions() + $assertions;
-    $this->setAssertions($total);
-  }
-
-  /**
-   * Helper function to increment failures.
-   */
-  public function addFailures($failures) {
-    $total = $this->getFailures()
-      + $failures;
-    $this->setFailures($total);
-  }
-
-  /**
-   * Helper function to increment errors.
-   */
-  public function addErrors($errors) {
-    $total = $this->getErrors() + $errors;
-    $this->setErrors($total);
+    return "Passes: " . $passes . ", Failures: " . $failures . " and " . $errors . " errors.";
   }
 
   /**
    * @return int
    */
-  public function getAssertions() {
-    return $this->assertions;
+  public function getPasses() {
+    return $this->passes;
   }
 
   /**
    * @param int $assertions
    */
-  public function setAssertions($assertions) {
-    $this->assertions = $assertions;
+  public function setPasses($passes) {
+    $this->passes = $passes;
+  }
+
+  /**
+   * @param int $assertions
+   */
+  public function incrementPasses() {
+    $this->passes++;
+  }
+
+  /**
+   * @return int
+   */
+  public function getDebugs() {
+    return $this->debugs;
+  }
+
+  /**
+   * @param int $debugs
+   */
+  public function setDebugs($debugs) {
+    $this->debugs = $debugs;
+  }
+
+  /**
+   * @param int $debugs
+   */
+  public function incrementDebugs() {
+    $this->debugs++;
   }
 
   /**
@@ -80,6 +85,13 @@ class ParserResults implements ParserResultsInterface {
   }
 
   /**
+   * Increment the errors.
+   */
+  public function incrementErrors() {
+    $this->errors++;
+  }
+
+  /**
    * @return int
    */
   public function getFailures() {
@@ -91,6 +103,13 @@ class ParserResults implements ParserResultsInterface {
    */
   public function setFailures($failures) {
     $this->failures = $failures;
+  }
+
+  /**
+   * @param int $failures
+   */
+  public function incrementFailures() {
+    $this->failures++;
   }
 
 }
