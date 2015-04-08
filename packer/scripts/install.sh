@@ -14,6 +14,7 @@ chown -R www-data:www-data /var/www/results
 
 # This adds a line to ensure we are loading configuration from
 # the file shipped with the parent image.
-if [ -f /etc/drupalci/settings.local.php ]; then
-    echo "<?php\nrequire_once '/etc/drupalci/settings.local.php';" >> /var/www/results/app/sites/default/settings.php
-fi
+echo "if (file_exists('/etc/drupalci/settings.local.php')) {
+  include '/etc/drupalci/settings.local.php';
+}
+" >> /var/www/results/app/sites/default/settings.php
