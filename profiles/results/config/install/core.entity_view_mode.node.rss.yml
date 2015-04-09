@@ -1,9 +1,0 @@
-id: node.rss
-label: RSS
-targetEntityType: node
-status: false
-cache: true
-langcode: und
-dependencies:
-  module:
-    - node

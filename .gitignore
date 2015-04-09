@@ -1,7 +1,0 @@
-.idea
-.vagrant
-vendor
-bin
-app
-.bundle
-build.properties

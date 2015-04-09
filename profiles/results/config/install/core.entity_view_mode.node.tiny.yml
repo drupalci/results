@@ -1,9 +1,0 @@
-id: node.tiny
-label: Tiny
-targetEntityType: node
-status: true
-cache: true
-langcode: und
-dependencies:
-  module:
-    - node

@@ -1,9 +1,0 @@
-id: node.search_index
-label: 'Search index'
-targetEntityType: node
-status: false
-cache: true
-langcode: und
-dependencies:
-  module:
-    - node
